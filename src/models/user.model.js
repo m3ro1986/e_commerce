@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { DataTypes } = require('sequelize');
 const database = require('../utils/connection');
 
@@ -22,6 +23,18 @@ const User = database.define('users', {
     avatar: {
         type: DataTypes.STRING,
         defaultValue: '/'
+    }
+}, {
+    hooks: {
+        beforeCreate: async (newUser) => {
+            try {
+                const salt = await bcrypt.genSalt(10);
+                const passhash = await bcrypt.hash(newUser.password, salt);
+                newUser.password = passhash;   
+            } catch (error) {
+                throw error;
+            }
+        }
     }
 });
 
