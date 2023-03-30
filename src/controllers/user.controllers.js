@@ -10,5 +10,16 @@ const createUser = async (req, res) => {
     }
 }
 
-module.exports = { createUser };
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        await userServices.update(id, data);
+        res.status(204).send();
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
+module.exports = { createUser, updateUser };
 
